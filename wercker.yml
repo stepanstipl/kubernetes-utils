@@ -1,0 +1,45 @@
+build:
+  box: golang:1.5.3-wheezy
+  steps:
+    - script:
+        name: setup env
+        code: |
+          apt-get update && apt-get install git mercurial
+          export GOPATH=$HOME/go-tools && \
+          mkdir -p $GOPATH && \
+          go get github.com/tools/godep && \
+          export GOPATH=$HOME/go-tools && \
+          export PATH=$PATH:$GOPATH/bin && \
+          export GOPATH=/go
+    - script:
+        name: go build
+        code: |
+          "${WERCKER_ROOT}/build.sh"
+    - script:
+        name: create influxdb-discovery binary archive
+        code: |
+          tar zcvf "${WERCKER_OUTPUT_DIR}/influxdb-discovery.tar.gz" "${WERCKER_OUTPUT_DIR}/influxdb-discovery"
+    - script:
+        name: output release tag
+        code: |
+          git describe --tags --exact --match '*.*.*' | tee "${WERCKER_OUTPUT_DIR}/.release_tag" || true
+    - script:
+        name: wercker debug
+        code: |
+          ls -al $WERCKER_OUTPUT_DIR
+deploy:
+  steps:
+    - script:
+        name: restore release tag
+        code: |
+          echo $WERCKER_ROOT && \
+          ls -al $WERCKER_ROOT && \
+          export MY_RELEASE_TAG=$(cat $WERCKER_ROOT/.release_tag) && \
+          echo "Release tag: ${MY_RELEASE_TAG}"
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: $MY_RELEASE_TAG
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: influxdb-discovery.tar.gz
+        content_type: application/x-gzip
