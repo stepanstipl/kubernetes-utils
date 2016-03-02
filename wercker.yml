@@ -1,5 +1,5 @@
+box: golang:1.5.3-wheezy
 build:
-  box: golang:1.5.3-wheezy
   steps:
     - script:
         name: setup env
