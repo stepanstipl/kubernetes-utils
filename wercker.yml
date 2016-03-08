@@ -18,7 +18,7 @@ build:
     - script:
         name: create influxdb-discovery binary archive
         code: |
-          tar zcvf "${WERCKER_OUTPUT_DIR}/influxdb-discovery.tar.gz" "${WERCKER_OUTPUT_DIR}/influxdb-discovery"
+          tar zcvf "${WERCKER_OUTPUT_DIR}/influxdb-discovery.tar.gz" -C "${WERCKER_OUTPUT_DIR}" ./influxdb-discovery
     - script:
         name: output release tag
         code: |
