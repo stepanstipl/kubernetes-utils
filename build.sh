@@ -1,9 +1,9 @@
 #!/bin/bash -x
 
 PROJECT='influxdb'
-INFLUXDB_VERSION='0.10.1-1'
+INFLUXDB_VERSION='0.10.2-1'
 INFLUXDB_PACKAGE="github.com/influxdb/influxdb"
-K8S_VERSION="1.1.7"
+K8S_VERSION="v1.2.0-beta.0"
 SOURCE_DIR=${SOURCE_DIR:-"$WERCKER_ROOT"}
 OUTPUT_DIR=${OUTPUT_DIR:-"$WERCKER_OUTPUT_DIR"}
 
@@ -26,4 +26,4 @@ mv "kubernetes-${K8S_VERSION}" "${GOPATH}/src/k8s.io/kubernetes"
 # Build influxdb-discovery
 cd "${GOPATH}/src/k8s.io/kubernetes"
 cp "/${SOURCE_DIR}/influxdb-discovery.go" ./
-~/go-tools/bin/godep go build -v -o "${OUTPUT_DIR}/influxdb-discovery" influxdb-discovery.go
+$HOME/go-tools/bin/godep go build -v -o "${OUTPUT_DIR}/influxdb-discovery" influxdb-discovery.go

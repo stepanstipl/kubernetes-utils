@@ -1,16 +1,18 @@
-box: golang:1.5.3-wheezy
+box:
+  id: alpine:edge
+  cmd: /bin/sh
 build:
   steps:
     - script:
         name: setup env
         code: |
-          apt-get update && apt-get install git mercurial
+          apk add --no-cache ca-certificates gcc musl-dev openssl git go bash && \
           export GOPATH=$HOME/go-tools && \
           mkdir -p $GOPATH && \
           go get github.com/tools/godep && \
-          export GOPATH=$HOME/go-tools && \
-          export PATH=$PATH:$GOPATH/bin && \
-          export GOPATH=/go
+          export GOPATH=/go && \
+          mkdir -p $GOPATH && \
+          export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
     - script:
         name: go build
         code: |
