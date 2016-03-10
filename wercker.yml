@@ -32,6 +32,9 @@ build:
 deploy:
   steps:
     - script:
+        name: setup
+        code: apk add --no-cache curl
+    - script:
         name: restore release tag
         code: |
           echo $WERCKER_ROOT && \
